@@ -1,3 +1,48 @@
+# BSD 3-Clause License
+# 
+# Copyright (c) 2021, European Spallation Source ERIC
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+# 
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# 
+# * Neither the name of the copyright holder nor the names of its
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#Source: https://gitlab.esss.lu.se/epics-modules/pace5000
+
+
+# PACE5000.db
+
+# Database file for GE PACE5000 pressure controller
+
+# Originlly Mark Rivers
+# November 13, 2012
+
+# Modified Anders Pettersson
+# 2018
+
+#############################################
+
 record(bo, "$(P)SIM")
 {
     field(SCAN, "Passive")
@@ -16,4 +61,205 @@ record(bo, "$(P)DISABLE")
     field(OMSL, "supervisory")
     field(ZNAM, "COMMS ENABLED")
     field(ONAM, "COMMS DISABLED")
+}
+
+record(bo, "$(P)$(R)DISABLE_POLL") {
+    field(DESC, "Disable polling")
+    field(PINI, "YES")
+    field(VAL, "0")
+    field(OMSL, "supervisory")
+    field(ZNAM, "Poll Enabled")
+    field(ONAM, "Poll Disabled")
+    field(ZSV, "NO_ALARM")
+    field(OSV, "MAJOR")
+}
+
+#############################################
+
+record(waveform,"$(P)$(R)Model_RBV") {
+    field(DTYP, "stream")
+    field(INP,  "@pace5000.proto getModel $(PORT)")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+    field(PINI, "YES")
+}
+
+record(ao,"$(P)$(R)Setpoint") {
+    field(DTYP, "stream")
+    field(OUT,  "@pace5000.proto setSetpoint $(PORT)")
+    field(PREC, "3")
+    field(DRVL, "0")
+    field(DRVH, "1")
+}
+
+# These records are for tweaking the pressure setpoint
+record(ao,"$(P)$(R)TweakVal") {
+    field(VAL, "1")
+    field(PREC,"1")
+}
+
+record(calcout,"$(P)$(R)TweakDown") {
+    field(INPA,"$(P)$(R)TweakVal.VAL NPP NMS")
+    field(INPB,"$(P)$(R)Setpoint.VAL NPP NMS")
+    field(CALC,"B-A")
+    field(OUT, "$(P)$(R)Setpoint.VAL PP NMS")
+}
+
+record(calcout,"$(P)$(R)TweakUp") {
+    field(INPA,"$(P)$(R)TweakVal.VAL NPP NMS")
+    field(INPB,"$(P)$(R)Setpoint.VAL NPP NMS")
+    field(CALC,"B+A")
+    field(OUT, "$(P)$(R)Setpoint.VAL PP NMS")
+}
+
+record(bo,"$(P)$(R)Control") {
+    field(PINI, "NO")
+    field(DTYP, "stream")
+    field(OUT,  "@pace5000.proto setControl $(PORT)")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+}
+
+# Enable the touchscreen on teh local device
+record(bo,"$(P)$(R)setLocal") {
+    field(PINI, "YES")
+    field(DTYP, "stream")
+    field(OUT,  "@pace5000.proto setLocal $(PORT)")
+}
+
+record(mbbo,"$(P)$(R)SlewMode") {
+    field(PINI, "YES")
+    field(DTYP, "stream")
+    field(OUT,  "@pace5000.proto setSlewMode $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "MAX")
+    field(ONVL, "1")
+    field(ONST, "LIN")
+}
+
+record(ao,"$(P)$(R)Slew") {
+    field(PINI, "YES")
+    field(DTYP, "stream")
+    field(OUT,  "@pace5000.proto setSlew $(PORT)")
+    field(PREC, "3")
+}
+
+record(mbbo,"$(P)$(R)Vent") {
+    field(PINI, "NO")
+    field(DTYP, "stream")
+    field(OUT,  "@pace5000.proto setVent $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "Stop vent")
+    field(ONVL, "1")
+    field(ONST, "Start vent")
+}
+
+record(mbbo,"$(P)$(R)Units") {
+    field(PINI, "YES")
+    field(DTYP, "stream")
+    field(OUT,  "@pace5000.proto setUnits $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "BAR")
+    field(ONVL, "1")
+    field(ONST, "MPA")
+    field(TWVL, "2")
+    field(TWST, "KG/CM2")
+    field(THVL, "3")
+    field(THST, "PSI")
+}
+
+
+# Read settings
+record(bo,"$(P)$(R)ReadSettingsScan") {
+    field(SCAN, "1 second")
+    field(SDIS, "$(P)$(R)DISABLE_POLL")
+    field(FLNK, "$(P)$(R)ReadSettings.PROC")
+}
+
+record(bo,"$(P)$(R)ReadSettings") {
+    field(PINI, "YES")
+    field(FLNK, "$(P)$(R)Pressure_RBV.PROC")
+}
+
+record(ai,"$(P)$(R)Pressure_RBV") {
+    field(DTYP, "stream")
+    field(INP,  "@pace5000.proto getPressure $(PORT)")
+    field(PREC, "3")
+    field(FLNK, "$(P)$(R)Units_RBV.PROC")
+}
+
+record(mbbi,"$(P)$(R)Units_RBV") {
+    field(DTYP, "stream")
+    field(INP,  "@pace5000.proto getUnits $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "BAR")
+    field(ONVL, "1")
+    field(ONST, "MPA")
+    field(TWVL, "2")
+    field(TWST, "KG/CM2")
+    field(THVL, "3")
+    field(THST, "PSI")
+    field(FLNK, "$(P)$(R)Control_RBV.PROC")
+}
+
+record(bi,"$(P)$(R)Control_RBV") {
+    field(DTYP, "stream")
+    field(INP,  "@pace5000.proto getControl $(PORT)")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(FLNK, "$(P)$(R)SlewMode_RBV.PROC")
+}
+
+record(mbbi,"$(P)$(R)SlewMode_RBV") {
+    field(DTYP, "stream")
+    field(INP,  "@pace5000.proto getSlewMode $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "MAX")
+    field(ONVL, "1")
+    field(ONST, "LIN")
+    field(FLNK, "$(P)$(R)Slew_RBV.PROC")
+}
+
+record(ai,"$(P)$(R)Slew_RBV") {
+    field(DTYP, "stream")
+    field(INP,  "@pace5000.proto getSlew $(PORT)")
+    field(PREC, "3")
+    field(FLNK, "$(P)$(R)Effort_RBV.PROC")
+}
+
+record(ai,"$(P)$(R)Effort_RBV") {
+    field(DTYP, "stream")
+    field(INP,  "@pace5000.proto getEffort $(PORT)")
+    field(PREC, "3")
+    field(FLNK, "$(P)$(R)Setpoint_RBV.PROC")
+}
+
+record(ai,"$(P)$(R)Setpoint_RBV") {
+    field(DTYP, "stream")
+    field(INP,  "@pace5000.proto getSetpoint $(PORT)")
+    field(PREC, "3")
+    field(FLNK, "$(P)$(R)Vent_RBV.PROC")
+}
+
+record(mbbi,"$(P)$(R)Vent_RBV") {
+    field(DTYP, "stream")
+    field(INP,  "@pace5000.proto getVent $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "Vent OK")
+    field(ONVL, "1")
+    field(ONST, "Vent in progress")
+    field(TWVL, "2")
+    field(TWST, "Vent complete")
+    field(FRVL, "4")
+    field(FRST, "Unknown vent state")
+    field(FLNK, "$(P)$(R)Error_RBV.PROC")
+}
+
+record(stringin,"$(P)$(R)Error_RBV") {
+    field(DTYP, "stream")
+    field(INP,  "@pace5000.proto getError $(PORT)")
+}
+
+record(asyn,"$(P)$(R)Asyn") {
+    field(PORT, "$(PORT)")
 }
