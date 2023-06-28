@@ -39,36 +39,54 @@ Terminator=CR LF;
 # Mark Rivers
 # November 13, 2012
 
-getUnits {
-   out ":UNIT:PRES?";
-   in  ":UNIT:PRES %s";
-}
-setUnits {
-   out ":UNIT:PRES %s";
+getPressure {
+   out ":SENS:PRES?";
+   in  ":SENS:PRES %f";
 }
 
-getControl {
-   out ":OUTP:STAT?";
-   in  ":OUTP:STAT %d";
-}
-setControl {
-   out ":OUTP:STAT %d";
+getPressureSetpoint {
+   out ":SOUR:PRES:LEV:IMM:AMPL?";
+   in  ":SOUR:PRES:LEV:IMM:AMPL %f";
 }
 
-getSlewMode {
-   out ":SOUR:PRES:SLEW:MODE?";
-   in  ":SOUR:PRES:SLEW:MODE %s";
-}
-setSlewMode {
-   out ":SOUR:PRES:SLEW:MODE %s";
+setPressureSetpoint {
+   out ":SOUR:PRES:LEV:IMM:AMPL %f";
 }
 
 getSlew {
    out ":SOUR:PRES:SLEW?";
    in  ":SOUR:PRES:SLEW %f";
 }
+
 setSlew {
    out ":SOUR:PRES:SLEW %f";
+}
+
+getSlewMode {
+   out ":SOUR:PRES:SLEW:MODE?";
+   in  ":SOUR:PRES:SLEW:MODE %s";
+}
+
+setSlewMode {
+   out ":SOUR:PRES:SLEW:MODE %s";
+}
+
+getUnits {
+   out ":UNIT:PRES?";
+   in  ":UNIT:PRES %s";
+}
+
+setUnits {
+   out ":UNIT:PRES %s";
+}
+
+getState {
+   out ":OUTP:STAT?";
+   in  ":OUTP:STAT %d";
+}
+
+setState {
+   out ":OUTP:STAT %d";
 }
 
 getEffort {
@@ -76,40 +94,12 @@ getEffort {
    in  ":SOUR:PRES:EFF %f";
 }
 
-getPressure {
-   out ":SENS:PRES?";
-   in  ":SENS:PRES %f";
-}
-
-getSetpoint {
-   out ":SOUR:PRES:LEV:IMM:AMPL?";
-   in  ":SOUR:PRES:LEV:IMM:AMPL %f";
-}
-
-setSetpoint {
-   out ":SOUR:PRES:LEV:IMM:AMPL %f";
-}
-
-getVent {
-   out ":SOUR:PRES:LEV:IMM:AMPL:VENT?";
-   in  ":SOUR:PRES:LEV:IMM:AMPL:VENT %d";
-}
-
-setVent {
-   out ":SOUR:PRES:LEV:IMM:AMPL:VENT %d";
+getFSV {
+   out ":INST:SENS:FULL?";
+   in  ":INST:SENS:FULL %f, %(\$1)f";
 }
 
 getError {
    out ":SYST:ERR?";
    in  ":SYST:ERR %80c";
-}
-
-getModel {
-   out "*IDN?";
-   in  "*IDN %80c";
-}
-
-# Unlocks the display on the device
-setLocal {
-   out ":GTL";
 }
