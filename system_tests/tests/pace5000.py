@@ -4,7 +4,7 @@ from parameterized import parameterized
 from utils.channel_access import ChannelAccess
 from utils.ioc_launcher import get_default_ioc_dir, IOCRegister
 from utils.test_modes import TestModes
-from utils.testing import get_running_lewis_and_ioc, parameterized_list
+from utils.testing import get_running_lewis_and_ioc, parameterized_list, skip_if_recsim
 
 
 DEVICE_PREFIX = "PACE5000_01"
@@ -74,7 +74,7 @@ class Pace5000Tests(unittest.TestCase):
         self.ca.set_pv_value(sp, value)
         self.ca.assert_that_pv_is(pv, value)
 
-    def test_WHEN_stop_issued_THEN_pressure_set_correctly(self):
+    def test_WHEN_stop_issued_THEN_pressure_setpoint_set_correctly(self):
         pressure = 12.0
         self._set("PRESSURE", "pressure", pressure)
 
@@ -85,3 +85,12 @@ class Pace5000Tests(unittest.TestCase):
         self.ca.set_pv_value("STOP", 1)
         self.ca.assert_that_pv_is("PRESSURE:SP", pressure)
         self.ca.assert_that_pv_is("PRESSURE:SP:RBV", pressure)
+
+    @skip_if_recsim("Requires emulator for disconnect logic.")
+    def test_WHEN_device_disconnects_THEN_pvs_go_into_alarm(self):
+        self.ca.assert_that_pv_alarm_is("PRESSURE", self.ca.Alarms.NONE)
+
+        with self._lewis.backdoor_simulate_disconnected_device():
+            self.ca.assert_that_pv_alarm_is("PRESSURE", self.ca.Alarms.INVALID, timeout=30)
+
+        self.ca.assert_that_pv_alarm_is("PRESSURE", self.ca.Alarms.NONE, timeout=30)
