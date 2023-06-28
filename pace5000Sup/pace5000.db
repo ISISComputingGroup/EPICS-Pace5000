@@ -68,6 +68,9 @@ record(ai,"$(P)PRESSURE") {
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getPressure $(PORT)")
     field(PREC, "6")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:PRESSURE")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
 }
@@ -76,6 +79,9 @@ record(ao,"$(P)PRESSURE:SP") {
     field(DTYP, "stream")
     field(OUT,  "@pace5000.proto setPressureSetpoint $(PORT)")
     field(PREC, "6")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:PRESSURE:SP")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
 }
@@ -85,6 +91,9 @@ record(ai,"$(P)PRESSURE:SP:RBV") {
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getPressureSetpoint $(PORT)")
     field(PREC, "6")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:PRESSURE:SP:RBV")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "MEDIUM")
     info(archive, "VAL")
 }
@@ -96,6 +105,9 @@ record(ai,"$(P)SLEW") {
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getSlew $(PORT)")
     field(PREC, "6")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:SLEW")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
 }
@@ -104,6 +116,9 @@ record(ao,"$(P)SLEW:SP") {
     field(DTYP, "stream")
     field(OUT,  "@pace5000.proto setSlew $(PORT)")
     field(PREC, "6")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:SLEW:SP")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
 }
@@ -116,6 +131,9 @@ record(mbbi,"$(P)SLEW:MODE") {
     field(ZRST, "MAX")
     field(ONVL, "1")
     field(ONST, "LIN")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:SLEW:MODE")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
 }
@@ -127,6 +145,9 @@ record(mbbo,"$(P)SLEW:MODE:SP") {
     field(ZRST, "MAX")
     field(ONVL, "1")
     field(ONST, "LIN")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:SLEW:MODE:SP")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
 }
@@ -137,6 +158,9 @@ record(stringin,"$(P)UNITS") {
     field(DTYP, "stream")
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getUnits $(PORT)")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:UNITS")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
 }
@@ -144,6 +168,9 @@ record(stringin,"$(P)UNITS") {
 record(stringout,"$(P)UNITS:SP") {
     field(DTYP, "stream")
     field(OUT,  "@pace5000.proto setUnits $(PORT)")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:UNITS:SP")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
 }
@@ -156,6 +183,9 @@ record(bi,"$(P)STATE") {
     field(INP,  "@pace5000.proto getState $(PORT)")
     field(ZNAM, "Measure") # OFF
     field(ONAM, "Control") # ON
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:STATE")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "LOW")
     info(archive, "VAL")
 }
@@ -165,6 +195,9 @@ record(bo,"$(P)STATE:SP") {
     field(OUT,  "@pace5000.proto setState $(PORT)")
     field(ZNAM, "Measure") # OFF
     field(ONAM, "Control") # ON
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:STATE:SP")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "LOW")
     info(archive, "VAL")
 }
@@ -177,6 +210,9 @@ record(ai,"$(P)EFFORT") {
     field(INP,  "@pace5000.proto getEffort $(PORT)")
     field(PREC, "6")
     field(EGU, "%")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:EFFORT")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
 }
@@ -188,12 +224,18 @@ record(ai,"$(P)LIMIT:UPPER") {
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getFSV($(P)LIMIT:LOWER) $(PORT)")
     field(PREC, "6")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:LIMIT:UPPER")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
 }
 
 record(ai,"$(P)LIMIT:LOWER") {
     field(PREC, "6")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:LIMIT:LOWER")
+    field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
 }
@@ -204,9 +246,87 @@ record(stringin,"$(P)ERROR") {
     field(DTYP, "stream")
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getError $(PORT)")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:ERROR")
+    field(SDIS, "$(P)DISABLE")
     info(alarm, "PACE5000")
     info(interest, "HIGH")
     info(archive, "VAL")
+}
+
+#############################################
+
+### SIMULATION RECORDS ###
+
+#############################################
+
+record(ai,"$(P)SIM:PRESSURE") {
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+alias("$(P)SIM:PRESSURE","$(P)SIM:PRESSURE:SP")
+alias("$(P)SIM:PRESSURE","$(P)SIM:PRESSURE:SP:RBV")
+
+#############################################
+
+record(ai,"$(P)SIM:SLEW") {
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+alias("$(P)SIM:SLEW","$(P)SIM:SLEW:SP")
+
+record(mbbi,"$(P)SIM:SLEW:MODE") {
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+alias("$(P)SIM:SLEW:MODE","$(P)SIM:SLEW:MODE:SP")
+
+#############################################
+
+record(stringin,"$(P)SIM:UNITS") {
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+alias("$(P)SIM:UNITS","$(P)SIM:UNITS:SP")
+
+#############################################
+
+record(bi,"$(P)SIM:STATE") {
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+alias("$(P)SIM:STATE","$(P)SIM:STATE:SP")
+
+#############################################
+
+record(ai,"$(P)SIM:EFFORT") {
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+#############################################
+
+record(ai,"$(P)SIM:LIMIT:UPPER") {
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+record(ai,"$(P)SIM:LIMIT:LOWER") {
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(FLNK, "$(P)LIMIT:LOWER")
+}
+
+#############################################
+
+record(stringin,"$(P)SIM:ERROR") {
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
 }
 
 #############################################
