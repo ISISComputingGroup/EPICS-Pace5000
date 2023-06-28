@@ -98,6 +98,12 @@ record(ai,"$(P)PRESSURE:SP:RBV") {
     info(archive, "VAL")
 }
 
+record(seq, "$(P)STOP") {
+  field(DESC, "Set Pressure SP to Pressure value")
+  field(DOL1, "$(P)PRESSURE")
+  field(LNK1, "$(P)PRESSURE:SP CA")
+}
+
 #############################################
 
 record(ai,"$(P)SLEW") {
@@ -265,8 +271,12 @@ record(ai,"$(P)SIM:PRESSURE") {
     field(DTYP, "Soft Channel")
 }
 
-alias("$(P)SIM:PRESSURE","$(P)SIM:PRESSURE:SP")
-alias("$(P)SIM:PRESSURE","$(P)SIM:PRESSURE:SP:RBV")
+record(ai,"$(P)SIM:PRESSURE:SP") {
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+alias("$(P)SIM:PRESSURE:SP","$(P)SIM:PRESSURE:SP:RBV")
 
 #############################################
 
