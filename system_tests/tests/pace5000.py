@@ -39,7 +39,7 @@ class Pace5000Tests(unittest.TestCase):
             self.ca.set_pv_value(f"SIM:SLEW:MODE", 0)
             self.ca.set_pv_value(f"SIM:UNITS", "BAR")
             self.ca.set_pv_value(f"SIM:STATE", 0)
-            self.ca.set_pv_value(f"SIM:EFFORT", 0)
+            self.ca.set_pv_value(f"SIM:EFFORT", 0.0)
             self.ca.set_pv_value(f"SIM:LIMIT:UPPER", 0.0)
             self.ca.set_pv_value(f"SIM:LIMIT:LOWER", 0.0)
             self.ca.set_pv_value(f"SIM:ERROR", "0, \"No error\"")
