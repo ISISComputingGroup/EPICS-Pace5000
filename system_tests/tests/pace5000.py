@@ -74,6 +74,18 @@ class Pace5000Tests(unittest.TestCase):
         self.ca.set_pv_value(sp, value)
         self.ca.assert_that_pv_is(pv, value)
 
+    @parameterized.expand(parameterized_list([
+        ("PRESSURE:SP:RBV", "PRESSURE:SP_NO_ACTION",  0.5),
+        ("SLEW",            "SLEW:SP_NO_ACTION",      0.3),
+        ("SLEW:MODE",       "SLEW:MODE:SP_NO_ACTION", "LIN"),
+        ("UNITS",           "UNITS:SP_NO_ACTION",     "ATM"),
+        ("STATE",           "STATE:SP_NO_ACTION",     "Control")
+    ]))
+    def test_GIVEN_no_action_setpoint_set_WHEN_action_triggered_THEN_pv_set_correctly(self, _, pv, sp_no_action, value):
+        self.ca.set_pv_value(sp_no_action, value)
+        self.ca.set_pv_value("SET", 1)
+        self.ca.assert_that_pv_is(pv, value)
+
     def test_WHEN_stop_issued_THEN_pressure_setpoint_set_correctly(self):
         pressure = 12.0
         self._set("PRESSURE", "pressure", pressure)
