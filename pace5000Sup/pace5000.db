@@ -63,6 +63,28 @@ record(bo, "$(P)DISABLE") {
 
 #############################################
 
+record(seq, "$(P)SET") {
+  field(DESC, "Propagate values to setpoints")
+  field(DOL1, "$(P)PRESSURE:SP_NO_ACTION")
+  field(LNK1, "$(P)PRESSURE:SP CA")
+  field(DOL2, "$(P)SLEW:SP_NO_ACTION")
+  field(LNK2, "$(P)SLEW:SP CA")
+  field(DOL3, "$(P)SLEW:MODE:SP_NO_ACTION")
+  field(LNK3, "$(P)SLEW:MODE:SP CA")
+  field(DO4,  "1")
+  field(LNK4, "$(P)UNITS:SP:_SETTER.PROC")
+  field(DOL5, "$(P)STATE:SP_NO_ACTION")
+  field(LNK5, "$(P)STATE:SP CA")
+}
+
+record(seq, "$(P)STOP") {
+  field(DESC, "Set Pressure SP to Pressure value")
+  field(DOL1, "$(P)PRESSURE")
+  field(LNK1, "$(P)PRESSURE:SP CA")
+}
+
+#############################################
+
 record(ai, "$(P)PRESSURE") {
     field(DTYP, "stream")
     field(SCAN, "1 second")
@@ -86,6 +108,12 @@ record(ao, "$(P)PRESSURE:SP") {
     info(archive, "VAL")
 }
 
+record(ao, "$(P)PRESSURE:SP_NO_ACTION") {
+    field(PREC, "6")
+    info(INTEREST, "LOW")
+    info(archive, "VAL")
+}
+
 record(ai, "$(P)PRESSURE:SP:RBV") {
     field(DTYP, "stream")
     field(SCAN, "1 second")
@@ -96,12 +124,6 @@ record(ai, "$(P)PRESSURE:SP:RBV") {
     field(SDIS, "$(P)DISABLE")
     info(INTEREST, "MEDIUM")
     info(archive, "VAL")
-}
-
-record(seq, "$(P)STOP") {
-  field(DESC, "Set Pressure SP to Pressure value")
-  field(DOL1, "$(P)PRESSURE")
-  field(LNK1, "$(P)PRESSURE:SP CA")
 }
 
 #############################################
@@ -126,6 +148,12 @@ record(ao, "$(P)SLEW:SP") {
     field(SIOL, "$(P)SIM:SLEW:SP")
     field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
+    info(archive, "VAL")
+}
+
+record(ao, "$(P)SLEW:SP_NO_ACTION") {
+    field(PREC, "6")
+    info(INTEREST, "LOW")
     info(archive, "VAL")
 }
 
@@ -158,6 +186,15 @@ record(mbbo, "$(P)SLEW:MODE:SP") {
     info(archive, "VAL")
 }
 
+record(mbbo, "$(P)SLEW:MODE:SP_NO_ACTION") {
+    field(ZRVL, "0")
+    field(ZRST, "MAX")
+    field(ONVL, "1")
+    field(ONST, "LIN")
+    info(INTEREST, "LOW")
+    info(archive, "VAL")
+}
+
 #############################################
 
 record(stringin, "$(P)UNITS") {
@@ -167,7 +204,6 @@ record(stringin, "$(P)UNITS") {
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:UNITS")
     field(SDIS, "$(P)DISABLE")
-    field(FLNK, "$(P)UNITS:_SETTER")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
 }
@@ -180,6 +216,18 @@ record(stringout, "$(P)UNITS:SP") {
     field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
+}
+
+record(stringout, "$(P)UNITS:SP_NO_ACTION") {
+    info(INTEREST, "LOW")
+    info(archive, "VAL")
+}
+
+record(stringout, "$(P)UNITS:SP:_SETTER") {
+    field(DESC, "Propagate string value to setpoint")
+	field(OMSL, "closed_loop")
+    field(DOL,  "$(P)UNITS:SP_NO_ACTION")
+    field(OUT,  "$(P)UNITS:SP CA")
 }
 
 #############################################
@@ -205,6 +253,13 @@ record(bo, "$(P)STATE:SP") {
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:STATE:SP")
     field(SDIS, "$(P)DISABLE")
+    info(INTEREST, "HIGH")
+    info(archive, "VAL")
+}
+
+record(bo, "$(P)STATE:SP_NO_ACTION") {
+    field(ZNAM, "Measure") # OFF
+    field(ONAM, "Control") # ON
     info(INTEREST, "LOW")
     info(archive, "VAL")
 }
@@ -216,7 +271,6 @@ record(ai, "$(P)EFFORT") {
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getEffort $(PORT)")
     field(PREC, "6")
-    field(EGU,  "%")
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:EFFORT")
     field(SDIS, "$(P)DISABLE")
