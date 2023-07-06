@@ -34,7 +34,8 @@
 # PACE5000.proto
 
 # stream protocol file for GE PACE5000 pressure controller
-Terminator=CR LF;
+Terminator=CR;
+ReadTimeout=1000;
 
 # Mark Rivers
 # November 13, 2012
