@@ -7,8 +7,8 @@ from lewis.utils.replies import conditional_reply
 @has_log
 class Pace5000StreamInterface(StreamInterface):
     
-    in_terminator = "\r\n"
-    out_terminator = "\r\n"
+    in_terminator = "\r"
+    out_terminator = "\r"
 
     def __init__(self):
         super(Pace5000StreamInterface, self).__init__()

@@ -29,4 +29,4 @@ class SimulatedPace5000(StateMachineDevice):
         self.effort = 0.0
         self.limit_upper = 0.0
         self.limit_lower = 0.0
-        self.error = "0, \"No error\""
+        self.error = "0, No error"
