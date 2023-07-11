@@ -326,7 +326,7 @@ record(ai, "$(P)SIM:PRESSURE") {
     field(DTYP, "Soft Channel")
 }
 
-record(ai, "$(P)SIM:PRESSURE:SP") {
+record(ao, "$(P)SIM:PRESSURE:SP") {
     field(SCAN, "Passive")
     field(DTYP, "Soft Channel")
 }
