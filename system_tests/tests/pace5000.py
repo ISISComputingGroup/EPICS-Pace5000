@@ -23,6 +23,15 @@ IOCS = [
 TEST_MODES = [TestModes.RECSIM, TestModes.DEVSIM]
 
 
+DEVICE_VARIABLES = {
+    "PRESSURE":    "pressure",
+    "EFFORT":      "effort",
+    "LIMIT:UPPER": "limit_upper",
+    "LIMIT:LOWER": "limit_lower",
+    "ERROR":       "error"
+}
+
+
 class Pace5000Tests(unittest.TestCase):
     """
     Tests for the Pace5000 IOC.
@@ -46,21 +55,21 @@ class Pace5000Tests(unittest.TestCase):
         else:
             self._lewis.backdoor_run_function_on_device("reset")
 
-    def _set(self, pv, device_variable, value):
+    def _set(self, pv, value):
         if IOCRegister.uses_rec_sim:
             self.ca.set_pv_value(f"SIM:{pv}", value)
         else:
-            self._lewis.backdoor_set_on_device(device_variable, value)
+            self._lewis.backdoor_set_on_device(DEVICE_VARIABLES[pv], value)
 
     @parameterized.expand(parameterized_list([
-        ("PRESSURE",    "pressure",     0.5),
-        ("EFFORT",      "effort",       12.5),
-        ("LIMIT:UPPER", "limit_upper",  0.7),
-        ("LIMIT:LOWER", "limit_lower",  0.3),
-        ("ERROR",       "error",        "202, \"No query allowed\"")
+        ("PRESSURE",    0.5),
+        ("EFFORT",      12.5),
+        ("LIMIT:UPPER", 0.7),
+        ("LIMIT:LOWER", 0.3),
+        ("ERROR",       "202, \"No query allowed\"")
     ]))
-    def test_WHEN_read_only_pv_set_THEN_pv_read_correctly(self, _, pv, device_variable, value):
-        self._set(pv, device_variable, value)
+    def test_WHEN_read_only_pv_set_THEN_pv_read_correctly(self, _, pv, value):
+        self._set(pv, value)
         self.ca.assert_that_pv_is(pv, value)
     
     @parameterized.expand(parameterized_list([
@@ -88,7 +97,7 @@ class Pace5000Tests(unittest.TestCase):
 
     def test_WHEN_stop_issued_THEN_pressure_setpoint_set_correctly(self):
         pressure = 12.0
-        self._set("PRESSURE", "pressure", pressure)
+        self._set("PRESSURE", pressure)
 
         self.ca.assert_that_pv_is("PRESSURE", pressure)
         self.ca.assert_that_pv_is_not("PRESSURE:SP", pressure)
