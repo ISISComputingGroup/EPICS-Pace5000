@@ -44,6 +44,7 @@ class Pace5000Tests(unittest.TestCase):
     def _reset_device(self):
         if IOCRegister.uses_rec_sim:
             self.ca.set_pv_value(f"SIM:PRESSURE", 0.0)
+            self.ca.set_pv_value(f"SIM:PRESSURE:SP", 0.0)
             self.ca.set_pv_value(f"SIM:SLEW", 0.0)
             self.ca.set_pv_value(f"SIM:SLEW:MODE", 0)
             self.ca.set_pv_value(f"SIM:UNITS", "BAR")
