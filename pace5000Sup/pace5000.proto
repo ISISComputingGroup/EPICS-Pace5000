@@ -1,0 +1,106 @@
+# BSD 3-Clause License
+# 
+# Copyright (c) 2021, European Spallation Source ERIC
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+# 
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# 
+# * Neither the name of the copyright holder nor the names of its
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#Source: https://gitlab.esss.lu.se/epics-modules/pace5000
+
+
+# PACE5000.proto
+
+# stream protocol file for GE PACE5000 pressure controller
+Terminator=CR;
+ReadTimeout=1000;
+
+# Mark Rivers
+# November 13, 2012
+
+getPressure {
+   out ":SENS:PRES?";
+   in  ":SENS:PRES %f";
+}
+
+getPressureSetpoint {
+   out ":SOUR:PRES:LEV:IMM:AMPL?";
+   in  ":SOUR:PRES:LEV:IMM:AMPL %f";
+}
+
+setPressureSetpoint {
+   out ":SOUR:PRES:LEV:IMM:AMPL %f";
+}
+
+getSlew {
+   out ":SOUR:PRES:SLEW?";
+   in  ":SOUR:PRES:SLEW %f";
+}
+
+setSlew {
+   out ":SOUR:PRES:SLEW %f";
+}
+
+getSlewMode {
+   out ":SOUR:PRES:SLEW:MODE?";
+   in  ":SOUR:PRES:SLEW:MODE %s";
+}
+
+setSlewMode {
+   out ":SOUR:PRES:SLEW:MODE %s";
+}
+
+getUnits {
+   out ":UNIT:PRES?";
+   in  ":UNIT:PRES %s";
+}
+
+setUnits {
+   out ":UNIT:PRES %s";
+}
+
+getState {
+   out ":OUTP:STAT?";
+   in  ":OUTP:STAT %d";
+}
+
+setState {
+   out ":OUTP:STAT %d";
+}
+
+getEffort {
+   out ":SOUR:PRES:EFF?";
+   in  ":SOUR:PRES:EFF %f";
+}
+
+getFSV {
+   out ":INST:SENS:FULL?";
+   in  ":INST:SENS:FULL %f, %(\$1)f";
+}
+
+getError {
+   out ":SYST:ERR?";
+   in  ":SYST:ERR %80c";
+}
