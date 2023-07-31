@@ -87,6 +87,7 @@ record(seq, "$(P)STOP") {
 
 record(ai, "$(P)PRESSURE") {
     field(DTYP, "stream")
+    field(DESC, "Read Current Pressure")
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getPressure $(PORT)")
     field(PREC, "6")
@@ -99,6 +100,7 @@ record(ai, "$(P)PRESSURE") {
 
 record(ao, "$(P)PRESSURE:SP") {
     field(DTYP, "stream")
+    field(DESC, "Set Pressure")
     field(OUT,  "@pace5000.proto setPressureSetpoint $(PORT)")
     field(PREC, "6")
     field(SIML, "$(P)SIM")
@@ -116,6 +118,7 @@ record(ao, "$(P)PRESSURE:SP_NO_ACTION") {
 
 record(ai, "$(P)PRESSURE:SP:RBV") {
     field(DTYP, "stream")
+    field(DESC, "Read last Pressure Setpoint")
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getPressureSetpoint $(PORT)")
     field(PREC, "6")
@@ -130,6 +133,7 @@ record(ai, "$(P)PRESSURE:SP:RBV") {
 
 record(ai, "$(P)SLEW") {
     field(DTYP, "stream")
+    field(DESC, "Read Current Slew Rate")
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getSlew $(PORT)")
     field(PREC, "6")
@@ -142,6 +146,7 @@ record(ai, "$(P)SLEW") {
 
 record(ao, "$(P)SLEW:SP") {
     field(DTYP, "stream")
+    field(DESC, "Set Slew Rate")
     field(OUT,  "@pace5000.proto setSlew $(PORT)")
     field(PREC, "6")
     field(SIML, "$(P)SIM")
@@ -159,6 +164,7 @@ record(ao, "$(P)SLEW:SP_NO_ACTION") {
 
 record(mbbi, "$(P)SLEW:MODE") {
     field(DTYP, "stream")
+    field(DESC, "Read Current Slew Mode")
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getSlewMode $(PORT)")
     field(ZRVL, "0")
@@ -174,6 +180,7 @@ record(mbbi, "$(P)SLEW:MODE") {
 
 record(mbbo, "$(P)SLEW:MODE:SP") {
     field(DTYP, "stream")
+    field(DESC, "Set Slew Mode")
     field(OUT,  "@pace5000.proto setSlewMode $(PORT)")
     field(ZRVL, "0")
     field(ZRST, "MAX")
@@ -199,6 +206,7 @@ record(mbbo, "$(P)SLEW:MODE:SP_NO_ACTION") {
 
 record(stringin, "$(P)UNITS") {
     field(DTYP, "stream")
+    field(DESC, "Read Device Units")
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getUnits $(PORT)")
     field(SIML, "$(P)SIM")
@@ -210,6 +218,7 @@ record(stringin, "$(P)UNITS") {
 
 record(stringout, "$(P)UNITS:SP") {
     field(DTYP, "stream")
+    field(DESC, "Set Device Units")
     field(OUT,  "@pace5000.proto setUnits $(PORT)")
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:UNITS:SP")
@@ -234,6 +243,7 @@ record(stringout, "$(P)UNITS:SP:_SETTER") {
 
 record(bi, "$(P)STATE") {
     field(DTYP, "stream")
+    field(DESC, "Read Current Device State")
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getState $(PORT)")
     field(ZNAM, "Measure") # OFF
@@ -247,6 +257,7 @@ record(bi, "$(P)STATE") {
 
 record(bo, "$(P)STATE:SP") {
     field(DTYP, "stream")
+    field(DESC, "Set Current Device State")
     field(OUT,  "@pace5000.proto setState $(PORT)")
     field(ZNAM, "Measure") # OFF
     field(ONAM, "Control") # ON
@@ -268,6 +279,7 @@ record(bo, "$(P)STATE:SP_NO_ACTION") {
 
 record(ai, "$(P)EFFORT") {
     field(DTYP, "stream")
+    field(DESC, "Read Effort Currently Exerted by Device")
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getEffort $(PORT)")
     field(PREC, "6")
@@ -282,6 +294,7 @@ record(ai, "$(P)EFFORT") {
 
 record(ai, "$(P)LIMIT:UPPER") {
     field(DTYP, "stream")
+    field(DESC, "Read Upper Limit for Pressure")
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getFSV($(P)LIMIT:LOWER) $(PORT)")
     field(PREC, "6")
@@ -293,6 +306,7 @@ record(ai, "$(P)LIMIT:UPPER") {
 }
 
 record(ai, "$(P)LIMIT:LOWER") {
+    field(DESC, "Read Lower Limit for Pressure")
     field(PREC, "6")
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:LIMIT:LOWER")
@@ -305,6 +319,7 @@ record(ai, "$(P)LIMIT:LOWER") {
 
 record(stringin, "$(P)ERROR") {
     field(DTYP, "stream")
+    field(DESC, "Current Error State")
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getError $(PORT)")
     field(SIML, "$(P)SIM")
