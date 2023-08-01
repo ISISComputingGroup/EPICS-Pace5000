@@ -91,6 +91,7 @@ record(ai, "$(P)PRESSURE") {
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getPressure $(PORT)")
     field(PREC, "6")
+    field(EGU, "")
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:PRESSURE")
     field(SDIS, "$(P)DISABLE")
@@ -103,6 +104,7 @@ record(ao, "$(P)PRESSURE:SP") {
     field(DESC, "Set Pressure")
     field(OUT,  "@pace5000.proto setPressureSetpoint $(PORT)")
     field(PREC, "6")
+    field(EGU, "")
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:PRESSURE:SP")
     field(SDIS, "$(P)DISABLE")
@@ -111,7 +113,9 @@ record(ao, "$(P)PRESSURE:SP") {
 }
 
 record(ao, "$(P)PRESSURE:SP_NO_ACTION") {
+    field(DESC, "Set Pressure but do not Action")
     field(PREC, "6")
+    field(EGU, "")
     info(INTEREST, "LOW")
     info(archive, "VAL")
 }
@@ -122,6 +126,7 @@ record(ai, "$(P)PRESSURE:SP:RBV") {
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getPressureSetpoint $(PORT)")
     field(PREC, "6")
+    field(EGU, "")
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:PRESSURE:SP:RBV")
     field(SDIS, "$(P)DISABLE")
@@ -137,6 +142,7 @@ record(ai, "$(P)SLEW") {
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getSlew $(PORT)")
     field(PREC, "6")
+    field(EGU, "")
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:SLEW")
     field(SDIS, "$(P)DISABLE")
@@ -149,6 +155,7 @@ record(ao, "$(P)SLEW:SP") {
     field(DESC, "Set Slew Rate")
     field(OUT,  "@pace5000.proto setSlew $(PORT)")
     field(PREC, "6")
+    field(EGU, "")
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:SLEW:SP")
     field(SDIS, "$(P)DISABLE")
@@ -158,6 +165,8 @@ record(ao, "$(P)SLEW:SP") {
 
 record(ao, "$(P)SLEW:SP_NO_ACTION") {
     field(PREC, "6")
+    field(EGU, "")
+    field(DESC, "Set Slew Rate but do not Action")
     info(INTEREST, "LOW")
     info(archive, "VAL")
 }
@@ -194,6 +203,7 @@ record(mbbo, "$(P)SLEW:MODE:SP") {
 }
 
 record(mbbo, "$(P)SLEW:MODE:SP_NO_ACTION") {
+    field(DESC, "Set Slew Mode but do not Action")
     field(ZRVL, "0")
     field(ZRST, "MAX")
     field(ONVL, "1")
@@ -228,6 +238,7 @@ record(stringout, "$(P)UNITS:SP") {
 }
 
 record(stringout, "$(P)UNITS:SP_NO_ACTION") {
+    field(DESC, "Set Device Units but do not Action")
     info(INTEREST, "LOW")
     info(archive, "VAL")
 }
@@ -257,7 +268,7 @@ record(bi, "$(P)STATE") {
 
 record(bo, "$(P)STATE:SP") {
     field(DTYP, "stream")
-    field(DESC, "Set Current Device State")
+    field(DESC, "Set Device State")
     field(OUT,  "@pace5000.proto setState $(PORT)")
     field(ZNAM, "Measure") # OFF
     field(ONAM, "Control") # ON
@@ -269,6 +280,7 @@ record(bo, "$(P)STATE:SP") {
 }
 
 record(bo, "$(P)STATE:SP_NO_ACTION") {
+    field(DESC, "Set Device State but do not Action")
     field(ZNAM, "Measure") # OFF
     field(ONAM, "Control") # ON
     info(INTEREST, "LOW")
@@ -283,6 +295,7 @@ record(ai, "$(P)EFFORT") {
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getEffort $(PORT)")
     field(PREC, "6")
+    field(EGU, "%")
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:EFFORT")
     field(SDIS, "$(P)DISABLE")
@@ -298,6 +311,7 @@ record(ai, "$(P)LIMIT:UPPER") {
     field(SCAN, "1 second")
     field(INP,  "@pace5000.proto getFSV($(P)LIMIT:LOWER) $(PORT)")
     field(PREC, "6")
+    field(EGU, "")
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:LIMIT:UPPER")
     field(SDIS, "$(P)DISABLE")
@@ -308,6 +322,7 @@ record(ai, "$(P)LIMIT:UPPER") {
 record(ai, "$(P)LIMIT:LOWER") {
     field(DESC, "Read Lower Limit for Pressure")
     field(PREC, "6")
+    field(EGU, "")
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:LIMIT:LOWER")
     field(SDIS, "$(P)DISABLE")
