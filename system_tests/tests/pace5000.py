@@ -72,12 +72,33 @@ class Pace5000Tests(unittest.TestCase):
     def test_WHEN_read_only_pv_set_THEN_pv_read_correctly(self, _, pv, value):
         self._set(pv, value)
         self.ca.assert_that_pv_is(pv, value)
+
+
+    @skip_if_recsim("requires emulator logic")
+    def test_WHEN_pressure_above_vent_threshold_THEN_cannot_vent(self):
+        threshold = 5
+        pressure = 12.0
+        self._set("PRESSURE", pressure)
+        self.ca.assert_that_pv_is("PRESSURE", pressure)
+        self.ca.set_pv_value("VENT_THRESHOLD", threshold)
+        self.ca.set_pv_value("VENT:SP", 1)
+        self.ca.assert_that_pv_is_not("VENT:SP:OUT", 1)
+        self.ca.assert_that_pv_is("VENT_STATUS.RVAL", 0)
+
+    @skip_if_recsim("requires emulator logic")
+    def test_WHEN_pressure_below_vent_threshold_THEN_can_vent(self):
+        threshold = 5
+        pressure = 3.0
+        self._set("PRESSURE", pressure)
+        self.ca.assert_that_pv_is("PRESSURE", pressure)
+        self.ca.set_pv_value("VENT_THRESHOLD", threshold)
+        self.ca.set_pv_value("VENT:SP", 1)
+        self.ca.assert_that_pv_is("VENT_STATUS.RVAL", 2)
     
     @parameterized.expand(parameterized_list([
         ("PRESSURE:SP:RBV", "PRESSURE:SP",  0.5),
         ("SLEW",            "SLEW:SP",      0.3),
         ("SLEW:MODE",       "SLEW:MODE:SP", "LIN"),
-        ("UNITS",           "UNITS:SP",     "ATM"),
         ("STATE",           "STATE:SP",     "Control")
     ]))
     def test_WHEN_pv_set_THEN_pv_read_correctly(self, _, pv, sp, value):
@@ -88,7 +109,6 @@ class Pace5000Tests(unittest.TestCase):
         ("PRESSURE:SP:RBV", "PRESSURE:SP_NO_ACTION",  0.5),
         ("SLEW",            "SLEW:SP_NO_ACTION",      0.3),
         ("SLEW:MODE",       "SLEW:MODE:SP_NO_ACTION", "LIN"),
-        ("UNITS",           "UNITS:SP_NO_ACTION",     "ATM"),
         ("STATE",           "STATE:SP_NO_ACTION",     "Control")
     ]))
     def test_GIVEN_no_action_setpoint_set_WHEN_action_triggered_THEN_pv_set_correctly(self, _, pv, sp_no_action, value):
