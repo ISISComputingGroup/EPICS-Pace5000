@@ -84,6 +84,7 @@ class Pace5000Tests(unittest.TestCase):
         self.ca.set_pv_value("VENT:SP", 1)
         self.ca.assert_that_pv_is_not("VENT:SP:OUT", 1)
         self.ca.assert_that_pv_is("VENT_STATUS.RVAL", 0)
+        self.ca.assert_that_pv_is("PRESSURE", pressure)
 
     @skip_if_recsim("requires emulator logic")
     def test_WHEN_pressure_below_vent_threshold_THEN_can_vent(self):
@@ -94,6 +95,7 @@ class Pace5000Tests(unittest.TestCase):
         self.ca.set_pv_value("VENT_THRESHOLD", threshold)
         self.ca.set_pv_value("VENT:SP", 1)
         self.ca.assert_that_pv_is("VENT_STATUS.RVAL", 2)
+        self.ca.assert_that_pv_is("PRESSURE", 0)
     
     @parameterized.expand(parameterized_list([
         ("PRESSURE:SP:RBV", "PRESSURE:SP",  0.5),
