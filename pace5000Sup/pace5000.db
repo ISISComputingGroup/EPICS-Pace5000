@@ -233,21 +233,12 @@ record(stringout, "$(P)UNITS:SP") {
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:UNITS:SP")
     field(SDIS, "$(P)DISABLE")
+
+    # Enforce units at startup
+    field(VAL, "Bar")
+    field(PINI, "YES")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
-}
-
-record(stringout, "$(P)UNITS:SP_NO_ACTION") {
-    field(DESC, "Set Device Units but do not Action")
-    info(INTEREST, "LOW")
-    info(archive, "VAL")
-}
-
-record(stringout, "$(P)UNITS:SP:_SETTER") {
-    field(DESC, "Propagate string value to setpoint")
-	field(OMSL, "closed_loop")
-    field(DOL,  "$(P)UNITS:SP_NO_ACTION")
-    field(OUT,  "$(P)UNITS:SP CA")
 }
 
 #############################################
@@ -328,6 +319,53 @@ record(ai, "$(P)LIMIT:LOWER") {
     field(SDIS, "$(P)DISABLE")
     info(INTEREST, "HIGH")
     info(archive, "VAL")
+}
+
+record(longin, "$(P)VENT_THRESHOLD") { 
+    field(DTYP, "Soft Channel")
+    field(VAL, "$(VENT_THRESHOLD=5)")
+}
+
+record(mbbi, "$(P)VENT_STATUS") {
+    field(DTYP, "stream")
+    field(SCAN, "1 second")
+    field(INP,  "@pace5000.proto getVent $(PORT)")
+    field(ZRVL, "0")
+    field(ZRST, "Vent OK")
+    field(ONVL, "1")
+    field(ONST, "Vent in progress")
+    field(TWVL, "2")
+    field(TWST, "Vent finished")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:VENT_STATUS")
+    field(SDIS, "$(P)DISABLE")
+    info(archive, "VAL")
+}
+
+record(bo, "$(P)VENT:SP") {
+    field(DESC, "Start/abort venting")
+    field(ZNAM, "ABORT")
+    field(ONAM, "START")
+    field(FLNK, "$(P)VENT:SP:CALC.PROC")
+}
+
+record(calcout, "$(P)VENT:SP:CALC")
+{
+    field(DESC, "vent if rbv<threshold")
+    field(INPA, "$(P)PRESSURE")
+    field(INPB, "$(P)VENT_THRESHOLD")
+    field(CALC, "(A<=B)?1:0")
+    field(OUT, "$(P)VENT:SP:OUT PP")
+}
+
+record(bo, "$(P)VENT:SP:OUT") {
+    field(DTYP, "stream")
+    field(OUT,  "@pace5000.proto setVent $(PORT)")
+    info(archive, "VAL")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:VENT:SP:OUT")
+    field(SDIS, "$(P)DISABLE")
+    field(UDFS, "No alarm")
 }
 
 #############################################
