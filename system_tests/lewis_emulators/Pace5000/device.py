@@ -23,8 +23,11 @@ class SimulatedPace5000(StateMachineDevice):
         self.pressure = 0.0
         self.pressure_sp = 0.0
         self.slew = 0.0
+
+        # Set slew mode and psi to non-ideal values as we need to test that we set them correctly 
+        # on startup 
         self.slew_mode = "MAX"
-        self.units = "BAR"
+        self.units = "PSI"
         self.state = 0
         self.effort = 0.0
         self.limit_upper = 0.0

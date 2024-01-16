@@ -101,12 +101,12 @@ getFSV {
 }
 
 getVent {
-   out ":SOUR:VENT?";
-   in  ":SOUR:VENT %d";
+   out ":SOUR:PRES:LEV:IMM:AMPL:VENT?";
+   in  ":SOUR:PRES:LEV:IMM:AMPL:VENT %d";
 }
 
 setVent {
-   out ":SOUR:VENT %d";
+   out ":SOUR:PRES:LEV:IMM:AMPL:VENT %d";
 }
 
 getError {

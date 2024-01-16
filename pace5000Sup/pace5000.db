@@ -195,6 +195,9 @@ record(mbbo, "$(P)SLEW:MODE:SP") {
     field(ZRST, "MAX")
     field(ONVL, "1")
     field(ONST, "LIN")
+    # Set to LIN by default
+    field(VAL, "1")
+    field(PINI, "YES")
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:SLEW:MODE:SP")
     field(SDIS, "$(P)DISABLE")
@@ -323,7 +326,7 @@ record(ai, "$(P)LIMIT:LOWER") {
 
 record(longin, "$(P)VENT_THRESHOLD") { 
     field(DTYP, "Soft Channel")
-    field(VAL, "$(VENT_THRESHOLD=5)")
+    field(VAL, "$(VENT_THRESHOLD)")
 }
 
 record(mbbi, "$(P)VENT_STATUS") {
