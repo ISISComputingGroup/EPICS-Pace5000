@@ -19,8 +19,8 @@ class Pace5000StreamInterface(StreamInterface):
             CmdBuilder(self.set_pressure_sp).escape(":SOUR:PRES:LEV:IMM:AMPL").spaces(at_least_one=True).float().eos().build(),
             CmdBuilder(self.get_slew).escape(":SOUR:PRES:SLEW?").eos().build(),
             CmdBuilder(self.set_slew).escape(":SOUR:PRES:SLEW").spaces(at_least_one=True).float().eos().build(),
-            CmdBuilder(self.get_vent).escape(":SOUR:VENT?").eos().build(),
-            CmdBuilder(self.set_vent).escape(":SOUR:VENT").spaces(at_least_one=True).int().eos().build(),
+            CmdBuilder(self.get_vent).escape(":SOUR:PRES:LEV:IMM:AMPL:VENT?").eos().build(),
+            CmdBuilder(self.set_vent).escape(":SOUR:PRES:LEV:IMM:AMPL:VENT").spaces(at_least_one=True).int().eos().build(),
             CmdBuilder(self.get_slew_mode).escape(":SOUR:PRES:SLEW:MODE?").eos().build(),
             CmdBuilder(self.set_slew_mode).escape(":SOUR:PRES:SLEW:MODE").spaces(at_least_one=True).string().eos().build(),
             CmdBuilder(self.get_units).escape(":UNIT:PRES?").eos().build(),
@@ -65,7 +65,7 @@ class Pace5000StreamInterface(StreamInterface):
 
     @conditional_reply("connected")
     def get_vent(self):
-        return f":SOUR:VENT {self.device.vent_status}"
+        return f":SOUR:PRES:LEV:IMM:AMPL:VENT {self.device.vent_status}"
 
     @conditional_reply("connected")
     def set_vent(self, value):
