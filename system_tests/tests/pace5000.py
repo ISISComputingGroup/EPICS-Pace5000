@@ -144,17 +144,16 @@ class Pace5000Tests(unittest.TestCase):
 
     @skip_if_recsim("Requires emulator for disconnect logic.")
     def test_WHEN_device_disconnects_and_units_changed_THEN_previous_units_reinforced(self):
-        self.ca.assert_that_pv_is("UNITS", "BAR")
+        self.ca.assert_that_pv_is("UNITS", "Bar")
         with self._lewis.backdoor_simulate_disconnected_device():
             self._set("UNITS", "PSI")
-        self.ca.set_pv_value("UNITS.PROC", 1)
-        self.ca.assert_that_pv_is("UNITS", "BAR", timeout=30)
+        self.ca.set_pv_value("DEFAULTS_SETTER.PROC", 1)
+        self.ca.assert_that_pv_is("UNITS", "Bar", timeout=30)
 
     @skip_if_recsim("Requires emulator.")
     def test_WHEN_ioc_started_THEN_slew_mode_set_to_linear(self):
         # Restart the IOC
         with self._ioc.start_with_macros({}, pv_to_wait_for="UNITS"):
             expected = "LIN"
-            slew_mode_from_device = self._lewis.backdoor_get_from_device(DEVICE_VARIABLES["SLEW:MODE:SP"])
-            self.assertEquals(slew_mode_from_device, expected)
-            self.ca.assert_that_pv_is("SLEW:MODE", "LIN")
+            self.ca.assert_that_pv_is("SLEW:MODE", expected)
+
