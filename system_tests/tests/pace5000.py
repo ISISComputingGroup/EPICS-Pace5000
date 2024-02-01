@@ -31,7 +31,8 @@ DEVICE_VARIABLES = {
     "LIMIT:LOWER": "limit_lower",
     "ERROR":       "error",
     "UNITS":       "units",
-    "SLEW:MODE:SP": "slew_mode"
+    "SLEW:MODE:SP": "slew_mode",
+    "SOURCE_PRESSURE": "source_pressure"
 }
 
 
@@ -70,7 +71,8 @@ class Pace5000Tests(unittest.TestCase):
         ("EFFORT",      12.5),
         ("LIMIT:UPPER", 0.7),
         ("LIMIT:LOWER", 0.3),
-        ("ERROR",       "202, \"No query allowed\"")
+        ("ERROR",       "202, \"No query allowed\""),
+        ("SOURCE_PRESSURE", 1.233)
     ]))
     def test_WHEN_read_only_pv_set_THEN_pv_read_correctly(self, _, pv, value):
         self._set(pv, value)

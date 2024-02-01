@@ -15,6 +15,7 @@ class Pace5000StreamInterface(StreamInterface):
         # Commands that we expect via serial during normal operation
         self.commands = {
             CmdBuilder(self.get_pressure).escape(":SENS:PRES?").eos().build(),
+            CmdBuilder(self.get_source_pressure).escape(":SOUR:PRES:COMP?").eos().build(),
             CmdBuilder(self.get_pressure_sp).escape(":SOUR:PRES:LEV:IMM:AMPL?").eos().build(),
             CmdBuilder(self.set_pressure_sp).escape(":SOUR:PRES:LEV:IMM:AMPL").spaces(at_least_one=True).float().eos().build(),
             CmdBuilder(self.get_slew).escape(":SOUR:PRES:SLEW?").eos().build(),
@@ -46,6 +47,11 @@ class Pace5000StreamInterface(StreamInterface):
     @conditional_reply("connected")
     def get_pressure(self):
         return f":SENS:PRES {self.device.pressure}"
+    
+    @conditional_reply("connected")
+    def get_source_pressure(self):
+        return f":SOUR:PRES:COMP {self.device.source_pressure}"
+    
     
     @conditional_reply("connected")
     def get_pressure_sp(self):

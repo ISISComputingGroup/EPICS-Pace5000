@@ -113,3 +113,8 @@ getError {
    out ":SYST:ERR?";
    in  ":SYST:ERR %80c";
 }
+
+getSourcePressure {
+   out ":SOUR:PRES:COMP?";
+   in  ":SOUR:PRES:COMP %f";
+}

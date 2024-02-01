@@ -34,6 +34,7 @@ class SimulatedPace5000(StateMachineDevice):
         self.limit_lower = 0.0
         self.error = "0, No error"
         self.vent_status = 0
+        self.source_pressure = 0
 
     def vent(self, start):
         if start == 1:

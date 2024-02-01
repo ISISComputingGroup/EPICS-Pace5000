@@ -99,6 +99,20 @@ record(ai, "$(P)PRESSURE") {
     info(archive, "VAL")
 }
 
+record(ai, "$(P)SOURCE_PRESSURE") {
+    field(DTYP, "stream")
+    field(DESC, "Read Source Pressure")
+    field(SCAN, "1 second")
+    field(INP,  "@pace5000.proto getSourcePressure $(PORT)")
+    field(PREC, "6")
+    field(EGU, "")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:SOURCE_PRESSURE")
+    field(SDIS, "$(P)DISABLE")
+    info(INTEREST, "HIGH")
+    info(archive, "VAL")
+}
+
 record(ao, "$(P)PRESSURE:SP") {
     field(DTYP, "stream")
     field(DESC, "Set Pressure")
@@ -401,6 +415,12 @@ record(stringin, "$(P)ERROR") {
 #############################################
 
 record(ai, "$(P)SIM:PRESSURE") {
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+
+record(ai, "$(P)SIM:SOURCE_PRESSURE") {
     field(SCAN, "Passive")
     field(DTYP, "Soft Channel")
 }
