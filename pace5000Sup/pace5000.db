@@ -187,7 +187,6 @@ record(ao, "$(P)SLEW:SP_NO_ACTION") {
 
 record(fanout, "$(P)DEFAULTS_SETTER") {
     field(DESC, "procs for default vars on device")
-    field(DTYP, "Soft channel")
     field(SCAN, "1 second")
     field(LNK1, "$(P)SLEW:MODE:SP")
     field(LNK2, "$(P)UNITS:SP")
