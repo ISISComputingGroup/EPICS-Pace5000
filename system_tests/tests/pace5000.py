@@ -2,7 +2,7 @@ import unittest
 from parameterized import parameterized
 
 from utils.channel_access import ChannelAccess
-from utils.ioc_launcher import get_default_ioc_dir, IOCRegister
+from utils.ioc_launcher import get_default_ioc_dir, IOCRegister, ProcServLauncher
 from utils.test_modes import TestModes
 from utils.testing import get_running_lewis_and_ioc, parameterized_list, skip_if_recsim
 
@@ -16,6 +16,7 @@ IOCS = [
         "directory": get_default_ioc_dir("PACE5000"),
         "macros": {},
         "emulator": "Pace5000",
+        "ioc_launcher_class": ProcServLauncher,
     },
 ]
 
@@ -28,7 +29,10 @@ DEVICE_VARIABLES = {
     "EFFORT":      "effort",
     "LIMIT:UPPER": "limit_upper",
     "LIMIT:LOWER": "limit_lower",
-    "ERROR":       "error"
+    "ERROR":       "error",
+    "UNITS":       "units",
+    "SLEW:MODE:SP": "slew_mode",
+    "SOURCE_PRESSURE": "source_pressure"
 }
 
 
@@ -67,7 +71,8 @@ class Pace5000Tests(unittest.TestCase):
         ("EFFORT",      12.5),
         ("LIMIT:UPPER", 0.7),
         ("LIMIT:LOWER", 0.3),
-        ("ERROR",       "202, \"No query allowed\"")
+        ("ERROR",       "202, \"No query allowed\""),
+        ("SOURCE_PRESSURE", 1.233)
     ]))
     def test_WHEN_read_only_pv_set_THEN_pv_read_correctly(self, _, pv, value):
         self._set(pv, value)
@@ -138,3 +143,19 @@ class Pace5000Tests(unittest.TestCase):
             self.ca.assert_that_pv_alarm_is("PRESSURE", self.ca.Alarms.INVALID, timeout=30)
 
         self.ca.assert_that_pv_alarm_is("PRESSURE", self.ca.Alarms.NONE, timeout=30)
+
+    @skip_if_recsim("Requires emulator for disconnect logic.")
+    def test_WHEN_device_disconnects_and_units_changed_THEN_previous_units_reinforced(self):
+        self.ca.assert_that_pv_is("UNITS", "Bar")
+        with self._lewis.backdoor_simulate_disconnected_device():
+            self._set("UNITS", "PSI")
+        self.ca.set_pv_value("DEFAULTS_SETTER.PROC", 1)
+        self.ca.assert_that_pv_is("UNITS", "Bar", timeout=30)
+
+    @skip_if_recsim("Requires emulator.")
+    def test_WHEN_ioc_started_THEN_slew_mode_set_to_linear(self):
+        # Restart the IOC
+        with self._ioc.start_with_macros({}, pv_to_wait_for="UNITS"):
+            expected = "LIN"
+            self.ca.assert_that_pv_is("SLEW:MODE", expected)
+

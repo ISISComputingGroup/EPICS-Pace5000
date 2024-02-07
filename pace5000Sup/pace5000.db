@@ -99,6 +99,20 @@ record(ai, "$(P)PRESSURE") {
     info(archive, "VAL")
 }
 
+record(ai, "$(P)SOURCE_PRESSURE") {
+    field(DTYP, "stream")
+    field(DESC, "Read Source Pressure")
+    field(SCAN, "1 second")
+    field(INP,  "@pace5000.proto getSourcePressure $(PORT)")
+    field(PREC, "6")
+    field(EGU, "")
+    field(SIML, "$(P)SIM")
+    field(SIOL, "$(P)SIM:SOURCE_PRESSURE")
+    field(SDIS, "$(P)DISABLE")
+    info(INTEREST, "HIGH")
+    info(archive, "VAL")
+}
+
 record(ao, "$(P)PRESSURE:SP") {
     field(DTYP, "stream")
     field(DESC, "Set Pressure")
@@ -171,6 +185,13 @@ record(ao, "$(P)SLEW:SP_NO_ACTION") {
     info(archive, "VAL")
 }
 
+record(fanout, "$(P)DEFAULTS_SETTER") {
+    field(DESC, "procs for default vars on device")
+    field(SCAN, "1 second")
+    field(LNK1, "$(P)SLEW:MODE:SP")
+    field(LNK2, "$(P)UNITS:SP")
+}
+
 record(mbbi, "$(P)SLEW:MODE") {
     field(DTYP, "stream")
     field(DESC, "Read Current Slew Mode")
@@ -195,6 +216,9 @@ record(mbbo, "$(P)SLEW:MODE:SP") {
     field(ZRST, "MAX")
     field(ONVL, "1")
     field(ONST, "LIN")
+    # Set to LIN by default
+    field(VAL, "1")
+    field(PINI, "YES")
     field(SIML, "$(P)SIM")
     field(SIOL, "$(P)SIM:SLEW:MODE:SP")
     field(SDIS, "$(P)DISABLE")
@@ -208,6 +232,7 @@ record(mbbo, "$(P)SLEW:MODE:SP_NO_ACTION") {
     field(ZRST, "MAX")
     field(ONVL, "1")
     field(ONST, "LIN")
+    field(VAL, "1")
     info(INTEREST, "LOW")
     info(archive, "VAL")
 }
@@ -323,7 +348,7 @@ record(ai, "$(P)LIMIT:LOWER") {
 
 record(longin, "$(P)VENT_THRESHOLD") { 
     field(DTYP, "Soft Channel")
-    field(VAL, "$(VENT_THRESHOLD=5)")
+    field(VAL, "$(VENT_THRESHOLD)")
 }
 
 record(mbbi, "$(P)VENT_STATUS") {
@@ -390,6 +415,12 @@ record(stringin, "$(P)ERROR") {
 #############################################
 
 record(ai, "$(P)SIM:PRESSURE") {
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+}
+
+
+record(ai, "$(P)SIM:SOURCE_PRESSURE") {
     field(SCAN, "Passive")
     field(DTYP, "Soft Channel")
 }
