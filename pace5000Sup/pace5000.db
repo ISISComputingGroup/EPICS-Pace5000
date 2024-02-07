@@ -232,6 +232,7 @@ record(mbbo, "$(P)SLEW:MODE:SP_NO_ACTION") {
     field(ZRST, "MAX")
     field(ONVL, "1")
     field(ONST, "LIN")
+    field(VAL, "1")
     info(INTEREST, "LOW")
     info(archive, "VAL")
 }
