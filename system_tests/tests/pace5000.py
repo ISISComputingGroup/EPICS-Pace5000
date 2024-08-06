@@ -1,11 +1,10 @@
 import unittest
-from parameterized import parameterized
 
+from parameterized import parameterized
 from utils.channel_access import ChannelAccess
-from utils.ioc_launcher import get_default_ioc_dir, IOCRegister, ProcServLauncher
+from utils.ioc_launcher import IOCRegister, ProcServLauncher, get_default_ioc_dir
 from utils.test_modes import TestModes
 from utils.testing import get_running_lewis_and_ioc, parameterized_list, skip_if_recsim
-
 
 DEVICE_PREFIX = "PACE5000_01"
 
@@ -47,16 +46,16 @@ class Pace5000Tests(unittest.TestCase):
 
     def _reset_device(self):
         if IOCRegister.uses_rec_sim:
-            self.ca.set_pv_value(f"SIM:PRESSURE", 0.0)
-            self.ca.set_pv_value(f"SIM:PRESSURE:SP", 0.0)
-            self.ca.set_pv_value(f"SIM:SLEW", 0.0)
-            self.ca.set_pv_value(f"SIM:SLEW:MODE", 0)
-            self.ca.set_pv_value(f"SIM:UNITS", "BAR")
-            self.ca.set_pv_value(f"SIM:STATE", 0)
-            self.ca.set_pv_value(f"SIM:EFFORT", 0.0)
-            self.ca.set_pv_value(f"SIM:LIMIT:UPPER", 0.0)
-            self.ca.set_pv_value(f"SIM:LIMIT:LOWER", 0.0)
-            self.ca.set_pv_value(f"SIM:ERROR", "0, No error")
+            self.ca.set_pv_value("SIM:PRESSURE", 0.0)
+            self.ca.set_pv_value("SIM:PRESSURE:SP", 0.0)
+            self.ca.set_pv_value("SIM:SLEW", 0.0)
+            self.ca.set_pv_value("SIM:SLEW:MODE", 0)
+            self.ca.set_pv_value("SIM:UNITS", "BAR")
+            self.ca.set_pv_value("SIM:STATE", 0)
+            self.ca.set_pv_value("SIM:EFFORT", 0.0)
+            self.ca.set_pv_value("SIM:LIMIT:UPPER", 0.0)
+            self.ca.set_pv_value("SIM:LIMIT:LOWER", 0.0)
+            self.ca.set_pv_value("SIM:ERROR", "0, No error")
         else:
             self._lewis.backdoor_run_function_on_device("reset")
 
