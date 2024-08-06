@@ -1,12 +1,11 @@
 from lewis.adapters.stream import StreamInterface
-from lewis.utils.command_builder import CmdBuilder
 from lewis.core.logging import has_log
+from lewis.utils.command_builder import CmdBuilder
 from lewis.utils.replies import conditional_reply
 
 
 @has_log
 class Pace5000StreamInterface(StreamInterface):
-    
     in_terminator = "\r"
     out_terminator = "\r"
 
@@ -17,17 +16,47 @@ class Pace5000StreamInterface(StreamInterface):
             CmdBuilder(self.get_pressure).escape(":SENS:PRES?").eos().build(),
             CmdBuilder(self.get_source_pressure).escape(":SOUR:PRES:COMP?").eos().build(),
             CmdBuilder(self.get_pressure_sp).escape(":SOUR:PRES:LEV:IMM:AMPL?").eos().build(),
-            CmdBuilder(self.set_pressure_sp).escape(":SOUR:PRES:LEV:IMM:AMPL").spaces(at_least_one=True).float().eos().build(),
+            CmdBuilder(self.set_pressure_sp)
+            .escape(":SOUR:PRES:LEV:IMM:AMPL")
+            .spaces(at_least_one=True)
+            .float()
+            .eos()
+            .build(),
             CmdBuilder(self.get_slew).escape(":SOUR:PRES:SLEW?").eos().build(),
-            CmdBuilder(self.set_slew).escape(":SOUR:PRES:SLEW").spaces(at_least_one=True).float().eos().build(),
+            CmdBuilder(self.set_slew)
+            .escape(":SOUR:PRES:SLEW")
+            .spaces(at_least_one=True)
+            .float()
+            .eos()
+            .build(),
             CmdBuilder(self.get_vent).escape(":SOUR:PRES:LEV:IMM:AMPL:VENT?").eos().build(),
-            CmdBuilder(self.set_vent).escape(":SOUR:PRES:LEV:IMM:AMPL:VENT").spaces(at_least_one=True).int().eos().build(),
+            CmdBuilder(self.set_vent)
+            .escape(":SOUR:PRES:LEV:IMM:AMPL:VENT")
+            .spaces(at_least_one=True)
+            .int()
+            .eos()
+            .build(),
             CmdBuilder(self.get_slew_mode).escape(":SOUR:PRES:SLEW:MODE?").eos().build(),
-            CmdBuilder(self.set_slew_mode).escape(":SOUR:PRES:SLEW:MODE").spaces(at_least_one=True).string().eos().build(),
+            CmdBuilder(self.set_slew_mode)
+            .escape(":SOUR:PRES:SLEW:MODE")
+            .spaces(at_least_one=True)
+            .string()
+            .eos()
+            .build(),
             CmdBuilder(self.get_units).escape(":UNIT:PRES?").eos().build(),
-            CmdBuilder(self.set_units).escape(":UNIT:PRES").spaces(at_least_one=True).string().eos().build(),
+            CmdBuilder(self.set_units)
+            .escape(":UNIT:PRES")
+            .spaces(at_least_one=True)
+            .string()
+            .eos()
+            .build(),
             CmdBuilder(self.get_state).escape(":OUTP:STAT?").eos().build(),
-            CmdBuilder(self.set_state).escape(":OUTP:STAT").spaces(at_least_one=True).int().eos().build(),
+            CmdBuilder(self.set_state)
+            .escape(":OUTP:STAT")
+            .spaces(at_least_one=True)
+            .int()
+            .eos()
+            .build(),
             CmdBuilder(self.get_effort).escape(":SOUR:PRES:EFF?").eos().build(),
             CmdBuilder(self.get_limits).escape(":INST:SENS:FULL?").eos().build(),
             CmdBuilder(self.get_error).escape(":SYST:ERR?").eos().build(),
@@ -47,12 +76,11 @@ class Pace5000StreamInterface(StreamInterface):
     @conditional_reply("connected")
     def get_pressure(self):
         return f":SENS:PRES {self.device.pressure}"
-    
+
     @conditional_reply("connected")
     def get_source_pressure(self):
         return f":SOUR:PRES:COMP {self.device.source_pressure}"
-    
-    
+
     @conditional_reply("connected")
     def get_pressure_sp(self):
         return f":SOUR:PRES:LEV:IMM:AMPL {self.device.pressure_sp}"
@@ -76,7 +104,7 @@ class Pace5000StreamInterface(StreamInterface):
     @conditional_reply("connected")
     def set_vent(self, value):
         self.device.vent(value)
-    
+
     @conditional_reply("connected")
     def get_slew_mode(self):
         return f":SOUR:PRES:SLEW:MODE {self.device.slew_mode}"
@@ -104,11 +132,11 @@ class Pace5000StreamInterface(StreamInterface):
     @conditional_reply("connected")
     def get_effort(self):
         return f":SOUR:PRES:EFF {self.device.effort}"
-    
+
     @conditional_reply("connected")
     def get_limits(self):
         return f":INST:SENS:FULL {self.device.limit_upper}, {self.device.limit_lower}"
-    
+
     @conditional_reply("connected")
     def get_error(self):
         return f":SYST:ERR {self.device.error}"
