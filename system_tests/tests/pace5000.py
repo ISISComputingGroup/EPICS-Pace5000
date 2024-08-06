@@ -24,14 +24,14 @@ TEST_MODES = [TestModes.RECSIM, TestModes.DEVSIM]
 
 
 DEVICE_VARIABLES = {
-    "PRESSURE":    "pressure",
-    "EFFORT":      "effort",
+    "PRESSURE": "pressure",
+    "EFFORT": "effort",
     "LIMIT:UPPER": "limit_upper",
     "LIMIT:LOWER": "limit_lower",
-    "ERROR":       "error",
-    "UNITS":       "units",
+    "ERROR": "error",
+    "UNITS": "units",
     "SLEW:MODE:SP": "slew_mode",
-    "SOURCE_PRESSURE": "source_pressure"
+    "SOURCE_PRESSURE": "source_pressure",
 }
 
 
@@ -39,6 +39,7 @@ class Pace5000Tests(unittest.TestCase):
     """
     Tests for the Pace5000 IOC.
     """
+
     def setUp(self):
         self._lewis, self._ioc = get_running_lewis_and_ioc("Pace5000", DEVICE_PREFIX)
         self.ca = ChannelAccess(device_prefix=DEVICE_PREFIX, default_wait_time=0)
@@ -65,18 +66,21 @@ class Pace5000Tests(unittest.TestCase):
         else:
             self._lewis.backdoor_set_on_device(DEVICE_VARIABLES[pv], value)
 
-    @parameterized.expand(parameterized_list([
-        ("PRESSURE",    0.5),
-        ("EFFORT",      12.5),
-        ("LIMIT:UPPER", 0.7),
-        ("LIMIT:LOWER", 0.3),
-        ("ERROR",       "202, \"No query allowed\""),
-        ("SOURCE_PRESSURE", 1.233)
-    ]))
+    @parameterized.expand(
+        parameterized_list(
+            [
+                ("PRESSURE", 0.5),
+                ("EFFORT", 12.5),
+                ("LIMIT:UPPER", 0.7),
+                ("LIMIT:LOWER", 0.3),
+                ("ERROR", '202, "No query allowed"'),
+                ("SOURCE_PRESSURE", 1.233),
+            ]
+        )
+    )
     def test_WHEN_read_only_pv_set_THEN_pv_read_correctly(self, _, pv, value):
         self._set(pv, value)
         self.ca.assert_that_pv_is(pv, value)
-
 
     @skip_if_recsim("requires emulator logic")
     def test_WHEN_pressure_above_vent_threshold_THEN_cannot_vent(self):
@@ -100,24 +104,34 @@ class Pace5000Tests(unittest.TestCase):
         self.ca.set_pv_value("VENT:SP", 1)
         self.ca.assert_that_pv_is("VENT_STATUS.RVAL", 2)
         self.ca.assert_that_pv_is("PRESSURE", 0)
-    
-    @parameterized.expand(parameterized_list([
-        ("PRESSURE:SP:RBV", "PRESSURE:SP",  0.5),
-        ("SLEW",            "SLEW:SP",      0.3),
-        ("SLEW:MODE",       "SLEW:MODE:SP", "LIN"),
-        ("STATE",           "STATE:SP",     "Control")
-    ]))
+
+    @parameterized.expand(
+        parameterized_list(
+            [
+                ("PRESSURE:SP:RBV", "PRESSURE:SP", 0.5),
+                ("SLEW", "SLEW:SP", 0.3),
+                ("SLEW:MODE", "SLEW:MODE:SP", "LIN"),
+                ("STATE", "STATE:SP", "Control"),
+            ]
+        )
+    )
     def test_WHEN_pv_set_THEN_pv_read_correctly(self, _, pv, sp, value):
         self.ca.set_pv_value(sp, value)
         self.ca.assert_that_pv_is(pv, value)
 
-    @parameterized.expand(parameterized_list([
-        ("PRESSURE:SP:RBV", "PRESSURE:SP_NO_ACTION",  0.5),
-        ("SLEW",            "SLEW:SP_NO_ACTION",      0.3),
-        ("SLEW:MODE",       "SLEW:MODE:SP_NO_ACTION", "LIN"),
-        ("STATE",           "STATE:SP_NO_ACTION",     "Control")
-    ]))
-    def test_GIVEN_no_action_setpoint_set_WHEN_action_triggered_THEN_pv_set_correctly(self, _, pv, sp_no_action, value):
+    @parameterized.expand(
+        parameterized_list(
+            [
+                ("PRESSURE:SP:RBV", "PRESSURE:SP_NO_ACTION", 0.5),
+                ("SLEW", "SLEW:SP_NO_ACTION", 0.3),
+                ("SLEW:MODE", "SLEW:MODE:SP_NO_ACTION", "LIN"),
+                ("STATE", "STATE:SP_NO_ACTION", "Control"),
+            ]
+        )
+    )
+    def test_GIVEN_no_action_setpoint_set_WHEN_action_triggered_THEN_pv_set_correctly(
+        self, _, pv, sp_no_action, value
+    ):
         self.ca.set_pv_value(sp_no_action, value)
         self.ca.set_pv_value("SET", 1)
         self.ca.assert_that_pv_is(pv, value)
@@ -157,4 +171,3 @@ class Pace5000Tests(unittest.TestCase):
         with self._ioc.start_with_macros({}, pv_to_wait_for="UNITS"):
             expected = "LIN"
             self.ca.assert_that_pv_is("SLEW:MODE", expected)
-
